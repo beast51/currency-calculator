@@ -1,0 +1,13 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: left;
+  height: 64px;
+  width: 100%;
+  padding: 0 16px;
+  color: var(--color-secondary);
+  font-size: 16px;
+  background: var(--background_header);
+  border-bottom: 1px solid var(--divider);
+  box-shadow: 0 4px 4px 0 var(--shadow), 0 0 4px 0 var(--shadow);
+}

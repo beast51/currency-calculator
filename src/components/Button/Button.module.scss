@@ -1,0 +1,24 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1px;
+  padding: 8px;
+  border-radius: 4px;
+  color: var(--color-secondary);
+  background: rgb(255, 255, 255);
+  box-shadow: rgb(0 0 0 / 12%) 0px 2px 4px 0px, rgb(0 0 0 / 12%) 0px 0px 4px 0px;
+  border-style: none;
+  border-width: 0px;
+  border-color: rgb(255, 255, 255);
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: rgb(0 0 0 / 12%) 0px 4px 8px 0px,
+      rgb(0 0 0 / 12%) 0px 2px 8px 0px;
+    color: var(--color-primary);
+  }
+}
