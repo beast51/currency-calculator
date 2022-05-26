@@ -152,7 +152,8 @@ export const Converter: FC<PropsType> = ({ currencys, currencySymbols }) => {
         />
       </div>
       <div className={style.row}>
-        <Button onClick={handleOnClickSwap}>
+        <Button onClick={handleOnClickSwap} className={style.transparent}>
+          swap
           <svg
             className={style.icon}
             height="24px"

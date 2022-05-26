@@ -4,10 +4,6 @@
   width: 100%;
   box-shadow: rgb(0 0 0 / 12%) 0px 2px 4px 0px, rgb(0 0 0 / 12%) 0px 0px 4px 0px;
   border-radius: 4px;
-
-  // &__button {
-  //   justify-self: center;
-  // }
 }
 
 .icon {
@@ -59,4 +55,9 @@
   &:hover {
     border-bottom: 2px solid var(--color-accent);
   }
+}
+
+.transparent {
+  color: transparent;
+  font-size: 0px;
 }

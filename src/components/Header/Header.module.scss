@@ -1,5 +1,3 @@
-// @import '../../styles/colors';
-
 .header {
   display: flex;
   justify-content: space-between;
@@ -20,6 +18,8 @@
 }
 
 .logo {
+  color: transparent;
+  font-size: 0px;
   & span {
     display: block;
     background: url(../../p24.svg) no-repeat center / contain;

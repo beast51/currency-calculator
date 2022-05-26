@@ -14,6 +14,7 @@ export const Header: FC<PropsType> = ({ currencys, currencySymbols }) => {
           target=""
         >
           <span></span>
+          Privat bank
         </a>
         <div className={style.container}>
           {currencys.map((currency: currencysType) => (
