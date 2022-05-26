@@ -5,29 +5,32 @@
   box-shadow: rgb(0 0 0 / 12%) 0px 2px 4px 0px, rgb(0 0 0 / 12%) 0px 0px 4px 0px;
   border-radius: 4px;
 
-  &__row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-  &__row:last-child {
+  // &__button {
+  //   justify-self: center;
+  // }
+}
+
+.icon {
+  fill: var(--color-secondary);
+  transform: rotate(90deg);
+  cursor: pointer;
+}
+
+.value {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: var(--background_main);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  &:last-child {
     justify-content: center;
     margin: 0;
-  }
-  &__button {
-    justify-self: center;
-  }
-  &__icon {
-    fill: var(--color-secondary);
-    transform: rotate(90deg);
-    cursor: pointer;
-  }
-  &__value {
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    border-radius: 4px;
-    background-color: var(--background_main);
   }
 }
 

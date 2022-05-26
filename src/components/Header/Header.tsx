@@ -1,25 +1,27 @@
 import { FC } from 'react'
-import { currencysType, HeaderPropsType } from '../../types/types'
+import { currencysType, PropsType } from '../../types/types'
 import { format } from '../../utils/common'
-import s from './Header.module.scss'
+import style from './Header.module.scss'
 
-export const Header: FC<HeaderPropsType> = ({ currencys, currencySymbols }) => {
+export const Header: FC<PropsType> = ({ currencys, currencySymbols }) => {
   return (
-    <header className={s.header}>
+    <header className={style.header}>
       <div className="wrapper">
         <a
-          className={s.logo}
+          className={style.logo}
           rel="noopener noreferrer"
           href="http://beast51.github.io/currency-calculator"
           target=""
         >
           <span></span>
         </a>
-        <div className={s.container}>
-          {currencys.map((cur: currencysType) => (
-            <div key={cur.ccy}>{`${currencySymbols[`${cur.ccy}`]} ${format(
-              parseFloat(cur.buy)
-            )} / ${format(parseFloat(cur.sale))}`}</div>
+        <div className={style.container}>
+          {currencys.map((currency: currencysType) => (
+            <div key={currency.ccy}>
+              {`${currencySymbols[`${currency.ccy}`]} ${format(
+                parseFloat(currency.buy)
+              )} / ${format(parseFloat(currency.sale))}`}
+            </div>
           ))}
         </div>
       </div>

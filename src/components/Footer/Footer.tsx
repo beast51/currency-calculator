@@ -1,10 +1,13 @@
-import { FC } from 'react';
-import s from './Footer.module.scss';
+import { FC, useMemo } from 'react'
+import style from './Footer.module.scss'
 
 export const Footer: FC = () => {
+  const currentYear = useMemo(() => {
+    return new Date().getUTCFullYear()
+  }, [])
   return (
-    <footer className={s.footer}>
-      <div className="wrapper">© 2022 made for ITOP1000</div>
+    <footer className={style.footer}>
+      <div className="wrapper">© {currentYear} made for Beast studio</div>
     </footer>
-  );
-};
+  )
+}

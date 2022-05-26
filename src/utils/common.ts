@@ -1,3 +1,3 @@
-export const format = (number: any) => {
+export const format = (number: number) => {
   return number.toFixed(2)
 }

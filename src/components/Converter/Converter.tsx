@@ -1,24 +1,23 @@
-import { FC, useEffect, useState } from 'react'
-import { ConverterPropsType } from '../../types/types'
+import { FC, useEffect, useMemo, useState } from 'react'
+import { PropsType } from '../../types/types'
 import { format } from '../../utils/common'
 import { Button } from '../Button/Button'
 import Input from '../Input/Input'
-import s from './Converter.module.scss'
+import style from './Converter.module.scss'
 
-const UAH = 'UAH'
-const USD = 'USD'
-const EUR = 'EUR'
-const currencyList = [UAH, USD, EUR]
+const enum CurrencyList {
+  UAH = 'UAH',
+  USD = 'USD',
+  EUR = 'EUR',
+}
 
-export const Converter: FC<ConverterPropsType> = ({
-  currencys,
-  currencySymbols,
-}) => {
-  const [currencyA, setCurrencyA] = useState(USD)
-  const [currencyB, setCurrencyB] = useState(UAH)
+const currencyList = [CurrencyList.UAH, CurrencyList.USD, CurrencyList.EUR]
 
-  const [amountA, setAmountA] = useState<number | ''>('')
-  const [amountB, setAmountB] = useState<number | ''>('')
+export const Converter: FC<PropsType> = ({ currencys, currencySymbols }) => {
+  const [currencyA, setCurrencyA] = useState(CurrencyList.USD)
+  const [currencyB, setCurrencyB] = useState(CurrencyList.UAH)
+  const [amountA, setAmountA] = useState<number | string>('')
+  const [amountB, setAmountB] = useState<number | string>('')
 
   const [isBuy, setIsBuy] = useState(true)
   const [isChange, setIsChange] = useState(false)
@@ -37,25 +36,18 @@ export const Converter: FC<ConverterPropsType> = ({
     if (isChange && amountA && amountB) {
       setCurrencyA(currencyB)
       setCurrencyB(currencyA)
-      if (!isBuy && currencyA !== UAH && currencyB !== UAH) {
-        setAmountB(format((amountA * +rates[currencyB]) / +rates[currencyA]))
-      } else if (isBuy && currencyA !== UAH && currencyB !== UAH) {
-        setAmountB(format((amountA * +rates[currencyB]) / +rates[currencyA]))
+      if (currencyA !== CurrencyList.UAH && currencyB !== CurrencyList.UAH) {
+        setAmountB(format((+amountA * +rates[currencyB]) / +rates[currencyA]))
       } else if (!isBuy) {
-        setAmountA(format(amountA * +rates[currencyA]))
+        setAmountA(format(+amountA * +rates[currencyA]))
         setAmountB(amountA)
       } else {
         setAmountA(amountB)
-        setAmountB(format(amountB * +rates[currencyB]))
+        setAmountB(format(+amountB * +rates[currencyB]))
       }
       setIsChange(!isChange)
     }
   }
-
-  useEffect(() => {
-    setRates(getRates(isBuy))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currencys])
 
   useEffect(() => {
     setRates(getRates(isBuy))
@@ -67,64 +59,76 @@ export const Converter: FC<ConverterPropsType> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rates])
 
-  const handleAmountAChange = (amountA: number) => {
-    setAmountB(format((amountA * +rates[currencyA]) / +rates[currencyB]))
+  const handleAmountAChange = (amountA: string) => {
+    setAmountB(format((+amountA * +rates[currencyA]) / +rates[currencyB]))
     setAmountA(amountA)
   }
-  const handleAmountBChange = (amountB: number) => {
-    setAmountA(format((amountB * +rates[currencyB]) / +rates[currencyA]))
+  const handleAmountBChange = (amountB: string) => {
+    setAmountA(format((+amountB * +rates[currencyB]) / +rates[currencyA]))
     setAmountB(amountB)
   }
-  const handleCurrencyAChange = (currencyA: string) => {
+  const handleCurrencyAChange = (currencyA: CurrencyList) => {
     setCurrencyA(currencyA)
     if (amountB) {
-      setAmountA(format((amountB * +rates[currencyB]) / +rates[currencyA]))
+      setAmountA(format((+amountB * +rates[currencyB]) / +rates[currencyA]))
     }
   }
-  const handleCurrencyBChange = (currencyB: string) => {
+  const handleCurrencyBChange = (currencyB: CurrencyList) => {
     setCurrencyB(currencyB)
     if (amountA) {
-      setAmountB(format((amountA * +rates[currencyA]) / +rates[currencyB]))
+      setAmountB(format((+amountA * +rates[currencyA]) / +rates[currencyB]))
     }
   }
   const handleOnClickSwap = () => {
     setIsChange(!isChange)
     setIsBuy(!isBuy)
   }
-  const getCurrentRate = () => {
-    if (currencyA === UAH) {
+
+  const getCurrentRate = useMemo(() => {
+    if (currencyA === CurrencyList.UAH && currencyB !== CurrencyList.UAH) {
       return `1 ${currencySymbols[currencyB]} = ${format(+rates[currencyB])} ${
         currencySymbols[currencyA]
       }`
-    }
-    if (currencyB === UAH) {
+    } else if (
+      currencyA !== CurrencyList.UAH &&
+      currencyB === CurrencyList.UAH
+    ) {
       return `1 ${currencySymbols[currencyA]} = ${format(+rates[currencyA])} ${
         currencySymbols[currencyB]
       }`
-    }
-    if (currencyA !== UAH && currencyB !== UAH) {
+    } else if (
+      currencyA !== CurrencyList.UAH &&
+      currencyB !== CurrencyList.UAH
+    ) {
       return `1 ${currencySymbols[currencyA]} = ${format(
         +rates[currencyA] / +rates[currencyB]
       )} ${currencySymbols[currencyB]}`
     }
-  }
-  const getButtonName = () => {
+  }, [currencyA, currencyB, rates, currencySymbols])
+
+  const getButtonName = useMemo(() => {
     let name = 'CHANGE CURRENCY'
-    if (currencyA !== UAH && currencyB === UAH) {
+    if (currencyA !== CurrencyList.UAH && currencyB === CurrencyList.UAH) {
       return (name = `SELL ${currencyA}`)
-    } else if (currencyB !== UAH && currencyA === UAH) {
+    } else if (
+      currencyB !== CurrencyList.UAH &&
+      currencyA === CurrencyList.UAH
+    ) {
       return (name = `BUY ${currencyB}`)
-    } else if (currencyA !== UAH && currencyB !== UAH) {
+    } else if (
+      currencyA !== CurrencyList.UAH &&
+      currencyB !== CurrencyList.UAH
+    ) {
       return (name = `BUY ${currencyB}`)
     }
     return name
-  }
+  }, [currencyA, currencyB])
 
   return (
-    <div className={s.converter}>
-      <div className={s.converter__row}>
+    <div className={style.converter}>
+      <div className={style.row}>
         <select
-          className={s.select}
+          className={style.select}
           name="currencyA"
           onChange={(e: any) => handleCurrencyAChange(e.currentTarget.value)}
           value={currencyA}
@@ -147,10 +151,10 @@ export const Converter: FC<ConverterPropsType> = ({
           onChange={(e: any) => handleAmountAChange(e.currentTarget.value)}
         />
       </div>
-      <div className={s.converter__row}>
+      <div className={style.row}>
         <Button onClick={handleOnClickSwap}>
           <svg
-            className={s.converter__icon}
+            className={style.icon}
             height="24px"
             width="24px"
             version="1.1"
@@ -167,17 +171,11 @@ export const Converter: FC<ConverterPropsType> = ({
             </g>
           </svg>
         </Button>
-        <div
-          className={s.converter__value}
-          data-qa-node="rate"
-          data-qa-value="1=33.7838"
-        >
-          {getCurrentRate()}
-        </div>
+        <div className={style.value}>{getCurrentRate}</div>
       </div>
-      <div className={s.converter__row}>
+      <div className={style.row}>
         <select
-          className={s.select}
+          className={style.select}
           name="currencyB"
           onChange={(e: any) => handleCurrencyBChange(e.currentTarget.value)}
           value={currencyB}
@@ -200,8 +198,8 @@ export const Converter: FC<ConverterPropsType> = ({
           onChange={(e: any) => handleAmountBChange(e.currentTarget.value)}
         />
       </div>
-      <div className={s.converter__row}>
-        <Button>{getButtonName()}</Button>
+      <div className={style.row}>
+        <Button>{getButtonName}</Button>
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import s from './Button.module.scss'
+import style from './Button.module.scss'
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
@@ -16,7 +16,7 @@ export const Button: FC<Props> = ({
     <button
       {...props}
       onClick={onClick}
-      className={[s.button, className].join(' ')}
+      className={[style.button, className].join(' ')}
     >
       {children}
     </button>
