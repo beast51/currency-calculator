@@ -1,9 +1,12 @@
-import { FC } from 'react'
-import { currencysType, PropsType } from '../../types/types'
+import { FC, useContext } from 'react'
+import { StoreContext } from '../../providers/CurrencysProvider'
+import { ContextType } from '../../types/types'
 import { format } from '../../utils/common'
 import style from './Header.module.scss'
 
-export const Header: FC<PropsType> = ({ currencys, currencySymbols }) => {
+export const Header: FC = () => {
+  const { currencys, currencySymbols } = useContext<ContextType>(StoreContext)
+  console.log(currencys)
   return (
     <header className={style.header}>
       <div className="wrapper">
@@ -17,7 +20,7 @@ export const Header: FC<PropsType> = ({ currencys, currencySymbols }) => {
           Privat bank
         </a>
         <div className={style.container}>
-          {currencys.map((currency: currencysType) => (
+          {currencys.map((currency) => (
             <div key={currency.ccy}>
               {`${currencySymbols[`${currency.ccy}`]} ${format(
                 parseFloat(currency.buy)

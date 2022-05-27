@@ -1,13 +1,14 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 
-export const useFetching = (callback: any) => {
+export const useFetching = <T>(callback: () => Promise<T>)  => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [data, setData] = useState<T | []>([])
 
-  const fetching = async () => {
+  const fetching= async () => {
     try {
       setIsLoading(true)
-      await callback()
+      setData(await callback())
     } catch (e: any) {
       setError(e.message)
     } finally {
@@ -15,5 +16,10 @@ export const useFetching = (callback: any) => {
     }
   }
 
-  return [fetching, isLoading, error]
+  useEffect(() => {
+    fetching()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return [data, isLoading, error]
 }

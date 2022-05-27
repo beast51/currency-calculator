@@ -1,5 +1,6 @@
-import { FC, useEffect, useMemo, useState } from 'react'
-import { PropsType } from '../../types/types'
+import { FC, useContext, useEffect, useMemo, useState } from 'react'
+import { StoreContext } from '../../providers/CurrencysProvider'
+import { ContextType } from '../../types/types'
 import { format } from '../../utils/common'
 import { Button } from '../Button/Button'
 import Input from '../Input/Input'
@@ -13,7 +14,8 @@ const enum CurrencyList {
 
 const currencyList = [CurrencyList.UAH, CurrencyList.USD, CurrencyList.EUR]
 
-export const Converter: FC<PropsType> = ({ currencys, currencySymbols }) => {
+export const Converter: FC = () => {
+  const { currencys, currencySymbols } = useContext<ContextType>(StoreContext)
   const [currencyA, setCurrencyA] = useState(CurrencyList.USD)
   const [currencyB, setCurrencyB] = useState(CurrencyList.UAH)
   const [amountA, setAmountA] = useState<number | string>('')
@@ -24,7 +26,7 @@ export const Converter: FC<PropsType> = ({ currencys, currencySymbols }) => {
 
   const getRates = (isBuy: boolean) => {
     const rates: { [key: string]: string } = { UAH: '1' }
-    currencys.forEach((item) => {
+    currencys.forEach((item: any) => {
       isBuy ? (rates[item.ccy] = item.buy) : (rates[item.ccy] = item.sale)
     })
     return rates
