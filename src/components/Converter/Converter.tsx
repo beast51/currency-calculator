@@ -26,7 +26,7 @@ export const Converter: FC = () => {
 
   const getRates = (isBuy: boolean) => {
     const rates: { [key: string]: string } = { UAH: '1' }
-    currencys.forEach((item: any) => {
+    currencys.forEach((item) => {
       isBuy ? (rates[item.ccy] = item.buy) : (rates[item.ccy] = item.sale)
     })
     return rates
@@ -132,7 +132,9 @@ export const Converter: FC = () => {
         <select
           className={style.select}
           name="currencyA"
-          onChange={(e: any) => handleCurrencyAChange(e.currentTarget.value)}
+          onChange={(e: React.BaseSyntheticEvent) =>
+            handleCurrencyAChange(e.currentTarget.value)
+          }
           value={currencyA}
         >
           {currencyList
@@ -150,7 +152,9 @@ export const Converter: FC = () => {
           placeholder="200.00"
           name="amountA"
           value={amountA}
-          onChange={(e: any) => handleAmountAChange(e.currentTarget.value)}
+          onChange={(e: React.BaseSyntheticEvent) =>
+            handleAmountAChange(e.currentTarget.value)
+          }
         />
       </div>
       <div className={style.row}>
@@ -180,7 +184,9 @@ export const Converter: FC = () => {
         <select
           className={style.select}
           name="currencyB"
-          onChange={(e: any) => handleCurrencyBChange(e.currentTarget.value)}
+          onChange={(e: React.BaseSyntheticEvent) =>
+            handleCurrencyBChange(e.currentTarget.value)
+          }
           value={currencyB}
         >
           {currencyList
@@ -198,7 +204,9 @@ export const Converter: FC = () => {
           placeholder="200.00"
           name="amountB"
           value={amountB}
-          onChange={(e: any) => handleAmountBChange(e.currentTarget.value)}
+          onChange={(e: React.BaseSyntheticEvent) =>
+            handleAmountBChange(e.currentTarget.value)
+          }
         />
       </div>
       <div className={style.row}>
