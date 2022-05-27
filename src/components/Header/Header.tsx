@@ -1,7 +1,7 @@
 import { FC, useContext } from 'react'
-import { StoreContext } from '../../providers/CurrencysProvider'
-import { ContextType } from '../../types/types'
-import { format } from '../../utils/common'
+import { StoreContext } from 'providers/CurrencysProvider'
+import { ContextType } from 'types/types'
+import { format } from 'utils/common'
 import style from './Header.module.scss'
 
 export const Header: FC = () => {

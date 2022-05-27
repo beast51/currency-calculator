@@ -1,14 +1,13 @@
 import style from './Spinner.module.scss'
 import { FC } from 'react'
+import cn from 'classnames'
 
 type SpinnerPropsType = {
   className?: string
 }
 
-const Spinner: FC<SpinnerPropsType> = (props) => {
-  return (
-    <div className={[style.spinner, props.className].join(' ')}>Loading...</div>
-  )
+const Spinner: FC<SpinnerPropsType> = ({ className }) => {
+  return <div className={cn(style.spinner, className)}>Loading...</div>
 }
 
 export default Spinner

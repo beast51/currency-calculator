@@ -1,11 +1,12 @@
 import { FC, useContext, useEffect, useMemo, useState } from 'react'
-import { StoreContext } from '../../providers/CurrencysProvider'
-import { ContextType } from '../../types/types'
-import { format } from '../../utils/common'
-import { Button } from '../Button/Button'
-import Input from '../Input/Input'
+import { StoreContext } from 'providers/CurrencysProvider'
+import { ContextType } from 'types/types'
+import { format } from 'utils/common'
+
+import Input from 'components/Input/Input'
 import style from './Converter.module.scss'
 
+import { Button } from 'components/Button/Button'
 const enum CurrencyList {
   UAH = 'UAH',
   USD = 'USD',

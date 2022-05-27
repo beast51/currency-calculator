@@ -1,8 +1,8 @@
 import { createContext, FC } from 'react'
-import DataService from '../API/DataService'
-import Spinner from '../components/Spinner/Spinner'
-import { useFetching } from '../hooks/useFetching'
-import { currencysType } from '../types/types'
+import DataService from 'API/DataService'
+import Spinner from 'components/Spinner/Spinner'
+import { useFetching } from 'hooks/useFetching'
+import { currencysType } from 'types/types'
 
 type StoreType = {
   currencys: currencysType
