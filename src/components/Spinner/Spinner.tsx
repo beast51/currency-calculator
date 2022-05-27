@@ -6,8 +6,6 @@ type SpinnerPropsType = {
   className?: string
 }
 
-const Spinner: FC<SpinnerPropsType> = ({ className }) => {
+export const Spinner: FC<SpinnerPropsType> = ({ className }) => {
   return <div className={cn(style.spinner, className)}>Loading...</div>
 }
-
-export default Spinner

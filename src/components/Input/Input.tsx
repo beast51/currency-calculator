@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import cn from 'classnames'
 import style from './Input.module.scss'
 
-export type InputPropsType = {
+type InputPropsType = {
   className?: string
   maxLength: number
   type: 'number'
@@ -13,8 +13,6 @@ export type InputPropsType = {
   onChange: (e: React.SyntheticEvent) => void
 }
 
-const Input: FC<InputPropsType> = ({ className, ...props }) => {
+export const Input: FC<InputPropsType> = ({ className, ...props }) => {
   return <input {...props} className={cn(style.input, className)} />
 }
-
-export default Input
