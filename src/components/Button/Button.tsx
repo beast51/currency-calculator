@@ -16,7 +16,7 @@ export const Button: FC<Props> = ({
     <button
       {...props}
       onClick={onClick}
-      className={cn(style.button, className)}
+      className={cn(className, style.button)}
     >
       {children}
     </button>
