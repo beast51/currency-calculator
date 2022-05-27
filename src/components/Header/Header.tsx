@@ -6,7 +6,7 @@ import style from './Header.module.scss'
 
 export const Header: FC = () => {
   const { currencys, currencySymbols } = useContext<ContextType>(StoreContext)
-  console.log(currencys)
+
   return (
     <header className={style.header}>
       <div className="wrapper">

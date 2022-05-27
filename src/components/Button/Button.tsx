@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import style from './Button.module.scss'
-
+import cn from 'classnames'
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
   onClick?: (e: React.SyntheticEvent) => void
@@ -16,7 +16,7 @@ export const Button: FC<Props> = ({
     <button
       {...props}
       onClick={onClick}
-      className={[style.button, className].join(' ')}
+      className={cn(style.button, className)}
     >
       {children}
     </button>

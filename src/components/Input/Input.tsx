@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
-import s from './Input.module.scss'
+import cn from 'classnames'
+import style from './Input.module.scss'
 
 export type InputPropsType = {
   className?: string
@@ -12,8 +13,8 @@ export type InputPropsType = {
   onChange: (e: React.SyntheticEvent) => void
 }
 
-const Input: FC<InputPropsType> = (props) => {
-  return <input {...props} className={[s.input, props.className].join(' ')} />
+const Input: FC<InputPropsType> = ({ className, ...props }) => {
+  return <input {...props} className={cn(style.input, className)} />
 }
 
 export default Input

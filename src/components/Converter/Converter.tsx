@@ -25,7 +25,7 @@ export const Converter: FC = () => {
   const [isChange, setIsChange] = useState(false)
 
   const getRates = (isBuy: boolean) => {
-    const rates: { [key: string]: string } = { UAH: '1' }
+    const rates: Record<string, string> = { UAH: '1' }
     currencys.forEach((item) => {
       isBuy ? (rates[item.ccy] = item.buy) : (rates[item.ccy] = item.sale)
     })
