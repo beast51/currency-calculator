@@ -13,14 +13,20 @@ const enum CurrencyList {
   EUR = 'EUR',
 }
 
+type StateType = {
+  from: { currency: CurrencyList; amount: number | string }
+  to: { currency: CurrencyList; amount: number | string }
+}
+
 const currencyList = [CurrencyList.UAH, CurrencyList.USD, CurrencyList.EUR]
 
 export const Converter: FC = () => {
   const { currencys, currencySymbols } = useContext<ContextType>(StoreContext)
-  const [currencyA, setCurrencyA] = useState(CurrencyList.USD)
-  const [currencyB, setCurrencyB] = useState(CurrencyList.UAH)
-  const [amountA, setAmountA] = useState<number | string>('')
-  const [amountB, setAmountB] = useState<number | string>('')
+
+  const [state, setState] = useState<StateType>({
+    from: { currency: CurrencyList.USD, amount: '' },
+    to: { currency: CurrencyList.UAH, amount: '' },
+  })
 
   const [isBuy, setIsBuy] = useState(true)
   const [isChange, setIsChange] = useState(false)
@@ -36,17 +42,43 @@ export const Converter: FC = () => {
   const [rates, setRates] = useState(getRates(isBuy))
 
   const swapLogic = () => {
-    if (isChange && amountA && amountB) {
-      setCurrencyA(currencyB)
-      setCurrencyB(currencyA)
-      if (currencyA !== CurrencyList.UAH && currencyB !== CurrencyList.UAH) {
-        setAmountB(format((+amountA * +rates[currencyB]) / +rates[currencyA]))
+    if (isChange && state.from.amount && state.to.amount) {
+      if (
+        state.from.currency !== CurrencyList.UAH &&
+        state.to.currency !== CurrencyList.UAH
+      ) {
+        setState({
+          from: { ...state.from, currency: state.to.currency },
+          to: {
+            currency: state.from.currency,
+            amount: format(
+              (+state.from.amount * +rates[state.to.currency]) /
+                +rates[state.from.currency]
+            ),
+          },
+        })
       } else if (!isBuy) {
-        setAmountA(format(+amountA * +rates[currencyA]))
-        setAmountB(amountA)
+        setState({
+          from: {
+            currency: state.to.currency,
+            amount: format(+state.from.amount * +rates[state.from.currency]),
+          },
+          to: {
+            currency: state.from.currency,
+            amount: format(+state.from.amount),
+          },
+        })
       } else {
-        setAmountA(amountB)
-        setAmountB(format(+amountB * +rates[currencyB]))
+        setState({
+          from: {
+            currency: state.to.currency,
+            amount: format(+state.to.amount),
+          },
+          to: {
+            currency: state.from.currency,
+            amount: format(+state.to.amount * +rates[state.to.currency]),
+          },
+        })
       }
       setIsChange(!isChange)
     }
@@ -62,70 +94,106 @@ export const Converter: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rates])
 
-  const handleAmountAChange = (amountA: string) => {
-    setAmountB(format((+amountA * +rates[currencyA]) / +rates[currencyB]))
-    setAmountA(amountA)
-  }
-  const handleAmountBChange = (amountB: string) => {
-    setAmountA(format((+amountB * +rates[currencyB]) / +rates[currencyA]))
-    setAmountB(amountB)
-  }
-  const handleCurrencyAChange = (currencyA: CurrencyList) => {
-    setCurrencyA(currencyA)
-    if (amountB) {
-      setAmountA(format((+amountB * +rates[currencyB]) / +rates[currencyA]))
+  const handleChange = (
+    element: 'amountA' | 'amountB' | 'currencyA' | 'currencyB',
+    value: number | CurrencyList
+  ) => {
+    if (element === 'amountA') {
+      setState({
+        from: { ...state.from, amount: value },
+        to: {
+          ...state.to,
+          amount: format(
+            (+value * +rates[state.from.currency]) / +rates[state.to.currency]
+          ),
+        },
+      })
+    }
+    if (element === 'amountB') {
+      setState({
+        from: {
+          ...state.from,
+          amount: format(
+            (+value * +rates[state.to.currency]) / +rates[state.from.currency]
+          ),
+        },
+        to: { ...state.to, amount: value },
+      })
+    }
+    if (element === 'currencyA') {
+      setState({
+        from: {
+          currency: value as CurrencyList,
+          amount: format(
+            (+state.to.amount * +rates[state.to.currency]) / +rates[value]
+          ),
+        },
+        to: { ...state.to },
+      })
+    }
+    if (element === 'currencyB') {
+      setState({
+        from: { ...state.from },
+        to: {
+          currency: value as CurrencyList,
+          amount: format(
+            (+state.to.amount * +rates[state.to.currency]) / +rates[value]
+          ),
+        },
+      })
     }
   }
-  const handleCurrencyBChange = (currencyB: CurrencyList) => {
-    setCurrencyB(currencyB)
-    if (amountA) {
-      setAmountB(format((+amountA * +rates[currencyA]) / +rates[currencyB]))
-    }
-  }
+
   const handleOnClickSwap = () => {
     setIsChange(!isChange)
     setIsBuy(!isBuy)
   }
 
   const getCurrentRate = useMemo(() => {
-    if (currencyA === CurrencyList.UAH && currencyB !== CurrencyList.UAH) {
-      return `1 ${currencySymbols[currencyB]} = ${format(+rates[currencyB])} ${
-        currencySymbols[currencyA]
-      }`
-    } else if (
-      currencyA !== CurrencyList.UAH &&
-      currencyB === CurrencyList.UAH
+    if (
+      state.from.currency === CurrencyList.UAH &&
+      state.to.currency !== CurrencyList.UAH
     ) {
-      return `1 ${currencySymbols[currencyA]} = ${format(+rates[currencyA])} ${
-        currencySymbols[currencyB]
-      }`
+      return `1 ${currencySymbols[state.to.currency]} = ${format(
+        +rates[state.to.currency]
+      )} ${currencySymbols[state.from.currency]}`
     } else if (
-      currencyA !== CurrencyList.UAH &&
-      currencyB !== CurrencyList.UAH
+      state.from.currency !== CurrencyList.UAH &&
+      state.to.currency === CurrencyList.UAH
     ) {
-      return `1 ${currencySymbols[currencyA]} = ${format(
-        +rates[currencyA] / +rates[currencyB]
-      )} ${currencySymbols[currencyB]}`
+      return `1 ${currencySymbols[state.from.currency]} = ${format(
+        +rates[state.from.currency]
+      )} ${currencySymbols[state.to.currency]}`
+    } else if (
+      state.from.currency !== CurrencyList.UAH &&
+      state.to.currency !== CurrencyList.UAH
+    ) {
+      return `1 ${currencySymbols[state.from.currency]} = ${format(
+        +rates[state.from.currency] / +rates[state.to.currency]
+      )} ${currencySymbols[state.to.currency]}`
     }
-  }, [currencyA, currencyB, rates, currencySymbols])
+  }, [state.from.currency, state.to.currency, rates, currencySymbols])
 
   const getButtonName = useMemo(() => {
     let name = 'CHANGE CURRENCY'
-    if (currencyA !== CurrencyList.UAH && currencyB === CurrencyList.UAH) {
-      return (name = `SELL ${currencyA}`)
-    } else if (
-      currencyB !== CurrencyList.UAH &&
-      currencyA === CurrencyList.UAH
+    if (
+      state.from.currency !== CurrencyList.UAH &&
+      state.to.currency === CurrencyList.UAH
     ) {
-      return (name = `BUY ${currencyB}`)
+      return (name = `SELL ${state.from.currency}`)
     } else if (
-      currencyA !== CurrencyList.UAH &&
-      currencyB !== CurrencyList.UAH
+      state.to.currency !== CurrencyList.UAH &&
+      state.from.currency === CurrencyList.UAH
     ) {
-      return (name = `BUY ${currencyB}`)
+      return (name = `BUY ${state.to.currency}`)
+    } else if (
+      state.from.currency !== CurrencyList.UAH &&
+      state.to.currency !== CurrencyList.UAH
+    ) {
+      return (name = `BUY ${state.to.currency}`)
     }
     return name
-  }, [currencyA, currencyB])
+  }, [state.from.currency, state.to.currency])
 
   return (
     <div className={style.converter}>
@@ -134,12 +202,12 @@ export const Converter: FC = () => {
           className={style.select}
           name="currencyA"
           onChange={(e: React.BaseSyntheticEvent) =>
-            handleCurrencyAChange(e.currentTarget.value)
+            handleChange('currencyA', e.currentTarget.value)
           }
-          value={currencyA}
+          value={state.from.currency}
         >
           {currencyList
-            .filter((item) => item !== currencyB)
+            .filter((item) => item !== state.to.currency)
             .map((item) => (
               <option key={item} value={item}>
                 {item}
@@ -152,9 +220,9 @@ export const Converter: FC = () => {
           autoComplete="off"
           placeholder="200.00"
           name="amountA"
-          value={amountA}
+          value={state.from.amount}
           onChange={(e: React.BaseSyntheticEvent) =>
-            handleAmountAChange(e.currentTarget.value)
+            handleChange('amountA', e.currentTarget.value)
           }
         />
       </div>
@@ -186,12 +254,12 @@ export const Converter: FC = () => {
           className={style.select}
           name="currencyB"
           onChange={(e: React.BaseSyntheticEvent) =>
-            handleCurrencyBChange(e.currentTarget.value)
+            handleChange('currencyB', e.currentTarget.value)
           }
-          value={currencyB}
+          value={state.to.currency}
         >
           {currencyList
-            .filter((item) => item !== currencyA)
+            .filter((item) => item !== state.from.currency)
             .map((item) => (
               <option key={item} value={item}>
                 {item}
@@ -204,9 +272,9 @@ export const Converter: FC = () => {
           autoComplete="off"
           placeholder="200.00"
           name="amountB"
-          value={amountB}
+          value={state.to.amount}
           onChange={(e: React.BaseSyntheticEvent) =>
-            handleAmountBChange(e.currentTarget.value)
+            handleChange('amountB', e.currentTarget.value)
           }
         />
       </div>
