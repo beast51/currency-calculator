@@ -95,10 +95,10 @@ export const Converter: FC = () => {
   }, [rates])
 
   const handleChange = (
-    element: 'amountA' | 'amountB' | 'currencyA' | 'currencyB',
+    element: 'amountFrom' | 'amountTo' | 'currencyFrom' | 'currencyTo',
     value: number | CurrencyList
   ) => {
-    if (element === 'amountA') {
+    if (element === 'amountFrom') {
       setState({
         from: { ...state.from, amount: value },
         to: {
@@ -109,7 +109,7 @@ export const Converter: FC = () => {
         },
       })
     }
-    if (element === 'amountB') {
+    if (element === 'amountTo') {
       setState({
         from: {
           ...state.from,
@@ -120,7 +120,7 @@ export const Converter: FC = () => {
         to: { ...state.to, amount: value },
       })
     }
-    if (element === 'currencyA') {
+    if (element === 'currencyFrom') {
       setState({
         from: {
           currency: value as CurrencyList,
@@ -131,7 +131,7 @@ export const Converter: FC = () => {
         to: { ...state.to },
       })
     }
-    if (element === 'currencyB') {
+    if (element === 'currencyTo') {
       setState({
         from: { ...state.from },
         to: {
@@ -200,9 +200,9 @@ export const Converter: FC = () => {
       <div className={style.row}>
         <select
           className={style.select}
-          name="currencyA"
+          name="currencyFrom"
           onChange={(e: React.BaseSyntheticEvent) =>
-            handleChange('currencyA', e.currentTarget.value)
+            handleChange('currencyFrom', e.currentTarget.value)
           }
           value={state.from.currency}
         >
@@ -219,10 +219,10 @@ export const Converter: FC = () => {
           type="number"
           autoComplete="off"
           placeholder="200.00"
-          name="amountA"
+          name="amountFrom"
           value={state.from.amount}
           onChange={(e: React.BaseSyntheticEvent) =>
-            handleChange('amountA', e.currentTarget.value)
+            handleChange('amountFrom', e.currentTarget.value)
           }
         />
       </div>
@@ -252,9 +252,9 @@ export const Converter: FC = () => {
       <div className={style.row}>
         <select
           className={style.select}
-          name="currencyB"
+          name="currencyTo"
           onChange={(e: React.BaseSyntheticEvent) =>
-            handleChange('currencyB', e.currentTarget.value)
+            handleChange('currencyTo', e.currentTarget.value)
           }
           value={state.to.currency}
         >
@@ -271,10 +271,10 @@ export const Converter: FC = () => {
           type="number"
           autoComplete="off"
           placeholder="200.00"
-          name="amountB"
+          name="amountTo"
           value={state.to.amount}
           onChange={(e: React.BaseSyntheticEvent) =>
-            handleChange('amountB', e.currentTarget.value)
+            handleChange('amountTo', e.currentTarget.value)
           }
         />
       </div>
