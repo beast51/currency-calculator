@@ -15,8 +15,8 @@ const App: FC = () => {
             <Converter />
           </main>
         </div>
-        <Footer />
       </CurrencysProvider>
+      <Footer />
     </div>
   )
 }
